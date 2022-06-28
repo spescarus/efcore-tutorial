@@ -25,7 +25,7 @@
         @foreach (var item in Model.Instructors)
         {
             string selectedRow = "";
-            if (item.Id == (int?)ViewData["InstructorId"])
+            if (item.Id == (long?)ViewData["InstructorId"])
             {
                 selectedRow = "success";
             }
@@ -81,7 +81,7 @@
         @foreach (var item in Model.Courses)
         {
             string selectedRow = "";
-            if (item.CourseId == (int?)ViewData["CourseId"])
+            if (item.CourseId == (long?)ViewData["CourseId"])
             {
                 selectedRow = "success";
             }

@@ -4,8 +4,8 @@ namespace EfCoreMvcTutorial.Models;
 
 public class OfficeAssignment
 {
-    public int Id           { get; set; }
-    public int InstructorId { get; set; }
+    public long Id           { get; set; }
+    public long InstructorId { get; set; }
 
     [StringLength(50)]
     [Display(Name = "Office Location")]

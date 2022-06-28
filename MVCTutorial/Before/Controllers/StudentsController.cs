@@ -67,7 +67,7 @@ public class StudentsController : Controller
     }
 
     // GET: Students/Details/5
-    public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> Details(long? id)
     {
         if (id == null)
         {
@@ -122,7 +122,7 @@ public class StudentsController : Controller
     }
 
     // GET: Students/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(long? id)
     {
         if (id == null)
         {
@@ -142,7 +142,7 @@ public class StudentsController : Controller
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost, ActionName("Edit")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditPost(int? id)
+    public async Task<IActionResult> EditPost(long? id)
     {
         if (id == null)
         {
@@ -171,7 +171,7 @@ public class StudentsController : Controller
     }
 
     // GET: Students/Delete/5
-    public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
+    public async Task<IActionResult> Delete(long? id, bool? saveChangesError = false)
     {
         if (id == null)
         {
@@ -198,7 +198,7 @@ public class StudentsController : Controller
     // POST: Students/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(long id)
     {
         var student = await _context.Students.FindAsync(id);
         if (student == null)
@@ -219,7 +219,7 @@ public class StudentsController : Controller
         }
     }
 
-    private bool StudentExists(int id)
+    private bool StudentExists(long id)
     {
         return _context.Students.Any(e => e.Id == id);
     }

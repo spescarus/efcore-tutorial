@@ -8,7 +8,7 @@ public class Course
 {
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Display(Name = "Number")]
-    public int CourseId { get; set; }
+    public long CourseId { get; set; }
 
     [StringLength(50, MinimumLength = 3)]
     public string Title { get; set; }
@@ -17,7 +17,7 @@ public class Course
     public int Credits { get; set; }
 
     [ForeignKey("Department")]
-    public int DepartmentId { get; set; }
+    public long DepartmentId { get; set; }
 
     public Department                    Department        { get; set; }
     public ICollection<Enrollment>       Enrollments       { get; set; }

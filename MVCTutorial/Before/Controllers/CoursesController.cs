@@ -27,7 +27,7 @@ public class CoursesController : Controller
     }
 
     // GET: Courses/Details/5
-    public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> Details(long? id)
     {
         if (id == null)
         {
@@ -71,7 +71,7 @@ public class CoursesController : Controller
     }
 
     // GET: Courses/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(long? id)
     {
         if (id == null)
         {
@@ -94,7 +94,7 @@ public class CoursesController : Controller
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost, ActionName("Edit")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditPost(int? id)
+    public async Task<IActionResult> EditPost(long? id)
     {
         if (id == null)
         {
@@ -134,7 +134,7 @@ public class CoursesController : Controller
     }
 
     // GET: Courses/Delete/5
-    public async Task<IActionResult> Delete(int? id)
+    public async Task<IActionResult> Delete(long? id)
     {
         if (id == null)
         {
@@ -156,7 +156,7 @@ public class CoursesController : Controller
     // POST: Courses/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(long id)
     {
         var course = await _context.Courses.FindAsync(id);
         _context.Courses.Remove(course);
@@ -170,7 +170,7 @@ public class CoursesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateCourseCredits(int? multiplier)
+    public async Task<IActionResult> UpdateCourseCredits(long? multiplier)
     {
         if (multiplier != null)
         {
@@ -182,7 +182,7 @@ public class CoursesController : Controller
         return View();
     }
 
-    private bool CourseExists(int id)
+    private bool CourseExists(long id)
     {
         return _context.Courses.Any(e => e.CourseId == id);
     }

@@ -47,12 +47,12 @@ public class HomeController : Controller
                         groups.Add(row);
                     }
                 }
-                reader.Dispose();
+                await reader.DisposeAsync();
             }
         }
         finally
         {
-            conn.Close();
+            await conn.CloseAsync();
         }
         return View(groups);
     }

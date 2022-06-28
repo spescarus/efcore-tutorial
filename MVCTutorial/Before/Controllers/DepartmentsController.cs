@@ -25,7 +25,7 @@ public class DepartmentsController : Controller
     }
 
     // GET: Departments/Details/5
-    public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> Details(long? id)
     {
         if (id == null)
         {
@@ -72,7 +72,7 @@ public class DepartmentsController : Controller
     }
 
     // GET: Departments/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(long? id)
     {
         if (id == null)
         {
@@ -97,7 +97,7 @@ public class DepartmentsController : Controller
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, byte[] rowVersion)
+    public async Task<IActionResult> Edit(long? id, byte[] rowVersion)
     {
         if (id == null)
         {
@@ -175,7 +175,7 @@ public class DepartmentsController : Controller
     }
 
     // GET: Departments/Delete/5
-    public async Task<IActionResult> Delete(int? id, bool? concurrencyError)
+    public async Task<IActionResult> Delete(long? id, bool? concurrencyError)
     {
         if (id == null)
         {
@@ -228,7 +228,7 @@ public class DepartmentsController : Controller
         }
     }
 
-    private bool DepartmentExists(int id)
+    private bool DepartmentExists(long id)
     {
         return _context.Departments.Any(e => e.Id == id);
     }

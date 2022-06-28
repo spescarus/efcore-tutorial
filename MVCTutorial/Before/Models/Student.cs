@@ -7,7 +7,7 @@ namespace EfCoreMvcTutorial.Models;
 
 public class Student
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [Required]
     [StringLength(50)]
@@ -24,7 +24,7 @@ public class Student
     {
         get
         {
-            return LastName + ", " + FirstMidName;
+            return LastName + " " + FirstMidName;
         }
     }
 

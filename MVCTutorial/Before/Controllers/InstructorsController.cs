@@ -20,8 +20,8 @@ public class InstructorsController : Controller
     }
 
     // GET: Instructors
-    public async Task<IActionResult> Index(int? id,
-                                           int? courseID)
+    public async Task<IActionResult> Index(long? id,
+                                           long? courseId)
     {
         var viewModel = new InstructorIndexData();
         viewModel.Instructors = await _context.Instructors
@@ -40,11 +40,11 @@ public class InstructorsController : Controller
             viewModel.Courses = instructor.CourseAssignments.Select(s => s.Course);
         }
 
-        if (courseID != null)
+        if (courseId != null)
         {
-            ViewData["CourseId"] = courseID.Value;
+            ViewData["CourseId"] = courseId.Value;
             var selectedCourse = viewModel.Courses
-                                          .Single(x => x.CourseId == courseID);
+                                          .Single(x => x.CourseId == courseId);
             await _context.Entry(selectedCourse)
                           .Collection(x => x.Enrollments)
                           .LoadAsync();
@@ -62,7 +62,7 @@ public class InstructorsController : Controller
     }
 
     // GET: Instructors/Details/5
-    public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> Details(long? id)
     {
         if (id == null)
         {
@@ -116,7 +116,7 @@ public class InstructorsController : Controller
     }
 
     // GET: Instructors/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(long? id)
     {
         if (id == null)
         {
@@ -141,13 +141,13 @@ public class InstructorsController : Controller
     private void PopulateAssignedCourseData(Instructor instructor)
     {
         var allCourses        = _context.Courses;
-        var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseId));
+        var instructorCourses = new HashSet<long>(instructor.CourseAssignments.Select(c => c.CourseId));
         var viewModel         = new List<AssignedCourseData>();
         foreach (var course in allCourses)
         {
             viewModel.Add(new AssignedCourseData
             {
-                CourseID = course.CourseId,
+                CourseId = course.CourseId,
                 Title    = course.Title,
                 Assigned = instructorCourses.Contains(course.CourseId)
             });
@@ -162,7 +162,7 @@ public class InstructorsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int?     id,
+    public async Task<IActionResult> Edit(long?     id,
                                           string[] selectedCourses)
     {
         if (id == null)
@@ -217,7 +217,7 @@ public class InstructorsController : Controller
         }
 
         var selectedCoursesHS = new HashSet<string>(selectedCourses);
-        var instructorCourses = new HashSet<int>
+        var instructorCourses = new HashSet<long>
             (instructorToUpdate.CourseAssignments.Select(c => c.Course.CourseId));
         foreach (var course in _context.Courses)
         {
@@ -241,7 +241,7 @@ public class InstructorsController : Controller
     }
 
     // GET: Instructors/Delete/5
-    public async Task<IActionResult> Delete(int? id)
+    public async Task<IActionResult> Delete(long? id)
     {
         if (id == null)
         {
@@ -261,7 +261,7 @@ public class InstructorsController : Controller
     // POST: Instructors/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(long id)
     {
         Instructor instructor = await _context.Instructors
                                               .Include(i => i.CourseAssignments)
@@ -278,7 +278,7 @@ public class InstructorsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private bool InstructorExists(int id)
+    private bool InstructorExists(long id)
     {
         return _context.Instructors.Any(e => e.Id == id);
     }
