@@ -7,7 +7,7 @@ namespace EfCoreMvcTutorial.Models;
 
 public class Department
 {
-    public int DepartmentID { get; set; }
+    public int Id { get; set; }
 
     [StringLength(50, MinimumLength = 3)]
     public string Name { get; set; }
@@ -21,7 +21,7 @@ public class Department
     [Display(Name = "Start Date")]
     public DateTime StartDate { get; set; }
 
-    public int? InstructorID { get; set; }
+    public int? InstructorId { get; set; }
 
     [Timestamp]
     public byte[] RowVersion { get; set; }

@@ -78,7 +78,7 @@ public class StudentsController : Controller
                                     .Include(s => s.Enrollments)
                                     .ThenInclude(e => e.Course)
                                     .AsNoTracking()
-                                    .FirstOrDefaultAsync(m => m.ID == id);
+                                    .FirstOrDefaultAsync(m => m.Id == id);
 
         if (student == null)
         {
@@ -148,7 +148,7 @@ public class StudentsController : Controller
         {
             return NotFound();
         }
-        var studentToUpdate = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
+        var studentToUpdate = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
         if (await TryUpdateModelAsync<Student>(
                 studentToUpdate,
                 "",
@@ -180,7 +180,7 @@ public class StudentsController : Controller
 
         var student = await _context.Students
                                     .AsNoTracking()
-                                    .FirstOrDefaultAsync(m => m.ID == id);
+                                    .FirstOrDefaultAsync(m => m.Id == id);
         if (student == null)
         {
             return NotFound();
@@ -221,6 +221,6 @@ public class StudentsController : Controller
 
     private bool StudentExists(int id)
     {
-        return _context.Students.Any(e => e.ID == id);
+        return _context.Students.Any(e => e.Id == id);
     }
 }

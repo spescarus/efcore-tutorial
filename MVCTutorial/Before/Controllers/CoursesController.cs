@@ -37,7 +37,7 @@ public class CoursesController : Controller
         var course = await _context.Courses
                                    .Include(c => c.Department)
                                    .AsNoTracking()
-                                   .FirstOrDefaultAsync(m => m.CourseID == id);
+                                   .FirstOrDefaultAsync(m => m.CourseId == id);
         if (course == null)
         {
             return NotFound();
@@ -58,7 +58,7 @@ public class CoursesController : Controller
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("CourseID,Credits,DepartmentID,Title")] Course course)
+    public async Task<IActionResult> Create([Bind("CourseId,Credits,DepartmentId,Title")] Course course)
     {
         if (ModelState.IsValid)
         {
@@ -66,7 +66,7 @@ public class CoursesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        PopulateDepartmentsDropDownList(course.DepartmentID);
+        PopulateDepartmentsDropDownList(course.DepartmentId);
         return View(course);
     }
 
@@ -80,12 +80,12 @@ public class CoursesController : Controller
 
         var course = await _context.Courses
                                    .AsNoTracking()
-                                   .FirstOrDefaultAsync(m => m.CourseID == id);
+                                   .FirstOrDefaultAsync(m => m.CourseId == id);
         if (course == null)
         {
             return NotFound();
         }
-        PopulateDepartmentsDropDownList(course.DepartmentID);
+        PopulateDepartmentsDropDownList(course.DepartmentId);
         return View(course);
     }
 
@@ -102,11 +102,11 @@ public class CoursesController : Controller
         }
 
         var courseToUpdate = await _context.Courses
-                                           .FirstOrDefaultAsync(c => c.CourseID == id);
+                                           .FirstOrDefaultAsync(c => c.CourseId == id);
 
         if (await TryUpdateModelAsync<Course>(courseToUpdate,
                                               "",
-                                              c => c.Credits, c => c.DepartmentID, c => c.Title))
+                                              c => c.Credits, c => c.DepartmentId, c => c.Title))
         {
             try
             {
@@ -121,7 +121,7 @@ public class CoursesController : Controller
                                              "see your system administrator.");
             }
         }
-        PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
+        PopulateDepartmentsDropDownList(courseToUpdate.DepartmentId);
         return View(courseToUpdate);
     }
 
@@ -130,7 +130,7 @@ public class CoursesController : Controller
         var departmentsQuery = from d in _context.Departments
                                orderby d.Name
                                select d;
-        ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "DepartmentID", "Name", selectedDepartment);
+        ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "Id", "Name", selectedDepartment);
     }
 
     // GET: Courses/Delete/5
@@ -144,7 +144,7 @@ public class CoursesController : Controller
         var course = await _context.Courses
                                    .Include(c => c.Department)
                                    .AsNoTracking()
-                                   .FirstOrDefaultAsync(m => m.CourseID == id);
+                                   .FirstOrDefaultAsync(m => m.CourseId == id);
         if (course == null)
         {
             return NotFound();
@@ -184,6 +184,6 @@ public class CoursesController : Controller
 
     private bool CourseExists(int id)
     {
-        return _context.Courses.Any(e => e.CourseID == id);
+        return _context.Courses.Any(e => e.CourseId == id);
     }
 }

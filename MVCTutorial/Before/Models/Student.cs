@@ -7,7 +7,7 @@ namespace EfCoreMvcTutorial.Models;
 
 public class Student
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [StringLength(50)]

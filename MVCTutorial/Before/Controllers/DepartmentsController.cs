@@ -32,7 +32,7 @@ public class DepartmentsController : Controller
             return NotFound();
         }
 
-        string query = "SELECT * FROM Department WHERE DepartmentID = {0}";
+        string query = "SELECT * FROM Departments WHERE Id = {0}";
         var department = await _context.Departments
                                        .FromSqlRaw(query, id)
                                        .Include(d => d.Administrator)
@@ -50,7 +50,7 @@ public class DepartmentsController : Controller
     // GET: Departments/Create
     public IActionResult Create()
     {
-        ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName");
+        ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName");
         return View();
     }
 
@@ -59,7 +59,7 @@ public class DepartmentsController : Controller
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("DepartmentID,Name,Budget,StartDate,InstructorID,RowVersion")] Department department)
+    public async Task<IActionResult> Create([Bind("Id,Name,Budget,StartDate,InstructorId,RowVersion")] Department department)
     {
         if (ModelState.IsValid)
         {
@@ -67,7 +67,7 @@ public class DepartmentsController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", department.InstructorID);
+        ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
         return View(department);
     }
 
@@ -82,13 +82,13 @@ public class DepartmentsController : Controller
         var department = await _context.Departments
                                        .Include(i => i.Administrator)
                                        .AsNoTracking()
-                                       .FirstOrDefaultAsync(m => m.DepartmentID == id);
+                                       .FirstOrDefaultAsync(m => m.Id == id);
 
         if (department == null)
         {
             return NotFound();
         }
-        ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", department.InstructorID);
+        ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
         return View(department);
     }
 
@@ -104,7 +104,7 @@ public class DepartmentsController : Controller
             return NotFound();
         }
 
-        var departmentToUpdate = await _context.Departments.Include(i => i.Administrator).FirstOrDefaultAsync(m => m.DepartmentID == id);
+        var departmentToUpdate = await _context.Departments.Include(i => i.Administrator).FirstOrDefaultAsync(m => m.Id == id);
 
         if (departmentToUpdate == null)
         {
@@ -112,7 +112,7 @@ public class DepartmentsController : Controller
             await TryUpdateModelAsync(deletedDepartment);
             ModelState.AddModelError(string.Empty,
                                      "Unable to save changes. The department was deleted by another user.");
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", deletedDepartment.InstructorID);
+            ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName", deletedDepartment.InstructorId);
             return View(deletedDepartment);
         }
 
@@ -121,7 +121,7 @@ public class DepartmentsController : Controller
         if (await TryUpdateModelAsync<Department>(
                 departmentToUpdate,
                 "",
-                s => s.Name, s => s.StartDate, s => s.Budget, s => s.InstructorID))
+                s => s.Name, s => s.StartDate, s => s.Budget, s => s.InstructorId))
         {
             try
             {
@@ -154,10 +154,10 @@ public class DepartmentsController : Controller
                     {
                         ModelState.AddModelError("StartDate", $"Current value: {databaseValues.StartDate:d}");
                     }
-                    if (databaseValues.InstructorID != clientValues.InstructorID)
+                    if (databaseValues.InstructorId != clientValues.InstructorId)
                     {
-                        Instructor databaseInstructor = await _context.Instructors.FirstOrDefaultAsync(i => i.ID == databaseValues.InstructorID);
-                        ModelState.AddModelError("InstructorID", $"Current value: {databaseInstructor?.FullName}");
+                        Instructor databaseInstructor = await _context.Instructors.FirstOrDefaultAsync(i => i.Id == databaseValues.InstructorId);
+                        ModelState.AddModelError("InstructorId", $"Current value: {databaseInstructor?.FullName}");
                     }
 
                     ModelState.AddModelError(string.Empty, "The record you attempted to edit "
@@ -170,7 +170,7 @@ public class DepartmentsController : Controller
                 }
             }
         }
-        ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", departmentToUpdate.InstructorID);
+        ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName", departmentToUpdate.InstructorId);
         return View(departmentToUpdate);
     }
 
@@ -185,7 +185,7 @@ public class DepartmentsController : Controller
         var department = await _context.Departments
                                        .Include(d => d.Administrator)
                                        .AsNoTracking()
-                                       .FirstOrDefaultAsync(m => m.DepartmentID == id);
+                                       .FirstOrDefaultAsync(m => m.Id == id);
         if (department == null)
         {
             if (concurrencyError.GetValueOrDefault())
@@ -214,7 +214,7 @@ public class DepartmentsController : Controller
     {
         try
         {
-            if (await _context.Departments.AnyAsync(m => m.DepartmentID == department.DepartmentID))
+            if (await _context.Departments.AnyAsync(m => m.Id == department.Id))
             {
                 _context.Departments.Remove(department);
                 await _context.SaveChangesAsync();
@@ -224,12 +224,12 @@ public class DepartmentsController : Controller
         catch (DbUpdateConcurrencyException /* ex */)
         {
             //Log the error (uncomment ex variable name and write a log.)
-            return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = department.DepartmentID });
+            return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = department.Id });
         }
     }
 
     private bool DepartmentExists(int id)
     {
-        return _context.Departments.Any(e => e.DepartmentID == id);
+        return _context.Departments.Any(e => e.Id == id);
     }
 }

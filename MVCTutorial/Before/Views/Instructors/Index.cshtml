@@ -25,7 +25,7 @@
         @foreach (var item in Model.Instructors)
         {
             string selectedRow = "";
-            if (item.ID == (int?)ViewData["InstructorID"])
+            if (item.Id == (int?)ViewData["InstructorId"])
             {
                 selectedRow = "success";
             }
@@ -52,15 +52,15 @@
                     @{
                         foreach (var course in item.CourseAssignments)
                         {
-                            @course.Course.CourseID @:  @course.Course.Title <br />
+                            @course.Course.CourseId @:  @course.Course.Title <br />
                         }
                     }
                 </td>
                 <td>
-                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    <a asp-action="Index" asp-route-id="@item.Id">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
@@ -81,16 +81,16 @@
         @foreach (var item in Model.Courses)
         {
             string selectedRow = "";
-            if (item.CourseID == (int?)ViewData["CourseID"])
+            if (item.CourseId == (int?)ViewData["CourseId"])
             {
                 selectedRow = "success";
             }
             <tr class="@selectedRow">
                 <td>
-                    @Html.ActionLink("Select", "Index", new { courseID = item.CourseID })
+                    @Html.ActionLink("Select", "Index", new { courseID = item.CourseId })
                 </td>
                 <td>
-                    @item.CourseID
+                    @item.CourseId
                 </td>
                 <td>
                     @item.Title

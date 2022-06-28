@@ -28,6 +28,6 @@ public class SchoolContext : DbContext
         modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignments");
 
         modelBuilder.Entity<CourseAssignment>()
-                    .HasKey(c => new { c.CourseID, c.InstructorID });
+                    .HasKey(c => new { CourseID = c.CourseId, InstructorID = c.InstructorId });
     }
 }

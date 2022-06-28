@@ -34,18 +34,17 @@ public class InstructorsController : Controller
 
         if (id != null)
         {
-            ViewData["InstructorID"] = id.Value;
-            Instructor instructor = viewModel.Instructors.Where(
-                                                  i => i.ID == id.Value)
-                                             .Single();
+            ViewData["InstructorId"] = id.Value;
+            Instructor instructor = viewModel.Instructors
+                                             .Single(i => i.Id == id.Value);
             viewModel.Courses = instructor.CourseAssignments.Select(s => s.Course);
         }
 
         if (courseID != null)
         {
-            ViewData["CourseID"] = courseID.Value;
-            var selectedCourse = viewModel.Courses.Where(x => x.CourseID == courseID)
-                                          .Single();
+            ViewData["CourseId"] = courseID.Value;
+            var selectedCourse = viewModel.Courses
+                                          .Single(x => x.CourseId == courseID);
             await _context.Entry(selectedCourse)
                           .Collection(x => x.Enrollments)
                           .LoadAsync();
@@ -71,7 +70,7 @@ public class InstructorsController : Controller
         }
 
         var instructor = await _context.Instructors
-                                       .FirstOrDefaultAsync(m => m.ID == id);
+                                       .FirstOrDefaultAsync(m => m.Id == id);
         if (instructor == null)
         {
             return NotFound();
@@ -100,7 +99,7 @@ public class InstructorsController : Controller
             instructor.CourseAssignments = new List<CourseAssignment>();
             foreach (var course in selectedCourses)
             {
-                var courseToAdd = new CourseAssignment { InstructorID = instructor.ID, CourseID = int.Parse(course) };
+                var courseToAdd = new CourseAssignment { InstructorId = instructor.Id, CourseId = int.Parse(course) };
                 instructor.CourseAssignments.Add(courseToAdd);
             }
         }
@@ -129,7 +128,7 @@ public class InstructorsController : Controller
                                        .Include(i => i.CourseAssignments)
                                        .ThenInclude(i => i.Course)
                                        .AsNoTracking()
-                                       .FirstOrDefaultAsync(m => m.ID == id);
+                                       .FirstOrDefaultAsync(m => m.Id == id);
         if (instructor == null)
         {
             return NotFound();
@@ -142,15 +141,15 @@ public class InstructorsController : Controller
     private void PopulateAssignedCourseData(Instructor instructor)
     {
         var allCourses        = _context.Courses;
-        var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseID));
+        var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseId));
         var viewModel         = new List<AssignedCourseData>();
         foreach (var course in allCourses)
         {
             viewModel.Add(new AssignedCourseData
             {
-                CourseID = course.CourseID,
+                CourseID = course.CourseId,
                 Title    = course.Title,
-                Assigned = instructorCourses.Contains(course.CourseID)
+                Assigned = instructorCourses.Contains(course.CourseId)
             });
         }
 
@@ -175,7 +174,7 @@ public class InstructorsController : Controller
                                                .Include(i => i.OfficeAssignment)
                                                .Include(i => i.CourseAssignments)
                                                .ThenInclude(i => i.Course)
-                                               .FirstOrDefaultAsync(m => m.ID == id);
+                                               .FirstOrDefaultAsync(m => m.Id == id);
 
         if (await TryUpdateModelAsync<Instructor>(
                 instructorToUpdate,
@@ -219,22 +218,22 @@ public class InstructorsController : Controller
 
         var selectedCoursesHS = new HashSet<string>(selectedCourses);
         var instructorCourses = new HashSet<int>
-            (instructorToUpdate.CourseAssignments.Select(c => c.Course.CourseID));
+            (instructorToUpdate.CourseAssignments.Select(c => c.Course.CourseId));
         foreach (var course in _context.Courses)
         {
-            if (selectedCoursesHS.Contains(course.CourseID.ToString()))
+            if (selectedCoursesHS.Contains(course.CourseId.ToString()))
             {
-                if (!instructorCourses.Contains(course.CourseID))
+                if (!instructorCourses.Contains(course.CourseId))
                 {
-                    instructorToUpdate.CourseAssignments.Add(new CourseAssignment { InstructorID = instructorToUpdate.ID, CourseID = course.CourseID });
+                    instructorToUpdate.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToUpdate.Id, CourseId = course.CourseId });
                 }
             }
             else
             {
 
-                if (instructorCourses.Contains(course.CourseID))
+                if (instructorCourses.Contains(course.CourseId))
                 {
-                    CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.FirstOrDefault(i => i.CourseID == course.CourseID);
+                    CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.FirstOrDefault(i => i.CourseId == course.CourseId);
                     _context.Remove(courseToRemove);
                 }
             }
@@ -250,7 +249,7 @@ public class InstructorsController : Controller
         }
 
         var instructor = await _context.Instructors
-                                       .FirstOrDefaultAsync(m => m.ID == id);
+                                       .FirstOrDefaultAsync(m => m.Id == id);
         if (instructor == null)
         {
             return NotFound();
@@ -266,12 +265,12 @@ public class InstructorsController : Controller
     {
         Instructor instructor = await _context.Instructors
                                               .Include(i => i.CourseAssignments)
-                                              .SingleAsync(i => i.ID == id);
+                                              .SingleAsync(i => i.Id == id);
 
         var departments = await _context.Departments
-                                        .Where(d => d.InstructorID == id)
+                                        .Where(d => d.InstructorId == id)
                                         .ToListAsync();
-        departments.ForEach(d => d.InstructorID = null);
+        departments.ForEach(d => d.InstructorId = null);
 
         _context.Instructors.Remove(instructor);
 
@@ -281,6 +280,6 @@ public class InstructorsController : Controller
 
     private bool InstructorExists(int id)
     {
-        return _context.Instructors.Any(e => e.ID == id);
+        return _context.Instructors.Any(e => e.Id == id);
     }
 }
