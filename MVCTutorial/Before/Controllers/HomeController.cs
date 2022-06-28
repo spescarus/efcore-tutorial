@@ -34,8 +34,7 @@ public class HomeController : Controller
             using (var command = conn.CreateCommand())
             {
                 string query = "SELECT EnrollmentDate, COUNT(*) AS StudentCount "
-                             + "FROM Person "
-                             + "WHERE Discriminator = 'Student' "
+                             + "FROM Students "
                              + "GROUP BY EnrollmentDate";
                 command.CommandText = query;
                 DbDataReader reader = await command.ExecuteReaderAsync();
