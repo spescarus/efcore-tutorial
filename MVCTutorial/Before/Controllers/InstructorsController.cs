@@ -20,7 +20,8 @@ public class InstructorsController : Controller
     }
 
     // GET: Instructors
-    public async Task<IActionResult> Index(int? id, int? courseID)
+    public async Task<IActionResult> Index(int? id,
+                                           int? courseID)
     {
         var viewModel = new InstructorIndexData();
         viewModel.Instructors = await _context.Instructors
@@ -35,19 +36,26 @@ public class InstructorsController : Controller
         {
             ViewData["InstructorID"] = id.Value;
             Instructor instructor = viewModel.Instructors.Where(
-                i => i.ID == id.Value).Single();
+                                                  i => i.ID == id.Value)
+                                             .Single();
             viewModel.Courses = instructor.CourseAssignments.Select(s => s.Course);
         }
 
         if (courseID != null)
         {
             ViewData["CourseID"] = courseID.Value;
-            var selectedCourse = viewModel.Courses.Where(x => x.CourseID == courseID).Single();
-            await _context.Entry(selectedCourse).Collection(x => x.Enrollments).LoadAsync();
+            var selectedCourse = viewModel.Courses.Where(x => x.CourseID == courseID)
+                                          .Single();
+            await _context.Entry(selectedCourse)
+                          .Collection(x => x.Enrollments)
+                          .LoadAsync();
             foreach (Enrollment enrollment in selectedCourse.Enrollments)
             {
-                await _context.Entry(enrollment).Reference(x => x.Student).LoadAsync();
+                await _context.Entry(enrollment)
+                              .Reference(x => x.Student)
+                              .LoadAsync();
             }
+
             viewModel.Enrollments = selectedCourse.Enrollments;
         }
 
@@ -84,7 +92,8 @@ public class InstructorsController : Controller
     // POST: Instructors/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("FirstMidName,HireDate,LastName,OfficeAssignment")] Instructor instructor, string[] selectedCourses)
+    public async Task<IActionResult> Create([Bind("FirstMidName,HireDate,LastName,Email,OfficeAssignment")] Instructor instructor,
+                                            string[]                                                                   selectedCourses)
     {
         if (selectedCourses != null)
         {
@@ -95,12 +104,14 @@ public class InstructorsController : Controller
                 instructor.CourseAssignments.Add(courseToAdd);
             }
         }
+
         if (ModelState.IsValid)
         {
             _context.Add(instructor);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
         PopulateAssignedCourseData(instructor);
         return View(instructor);
     }
@@ -115,13 +126,15 @@ public class InstructorsController : Controller
 
         var instructor = await _context.Instructors
                                        .Include(i => i.OfficeAssignment)
-                                       .Include(i => i.CourseAssignments).ThenInclude(i => i.Course)
+                                       .Include(i => i.CourseAssignments)
+                                       .ThenInclude(i => i.Course)
                                        .AsNoTracking()
                                        .FirstOrDefaultAsync(m => m.ID == id);
         if (instructor == null)
         {
             return NotFound();
         }
+
         PopulateAssignedCourseData(instructor);
         return View(instructor);
     }
@@ -140,6 +153,7 @@ public class InstructorsController : Controller
                 Assigned = instructorCourses.Contains(course.CourseID)
             });
         }
+
         ViewData["Courses"] = viewModel;
     }
 
@@ -149,7 +163,8 @@ public class InstructorsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, string[] selectedCourses)
+    public async Task<IActionResult> Edit(int?     id,
+                                          string[] selectedCourses)
     {
         if (id == null)
         {
@@ -165,12 +180,13 @@ public class InstructorsController : Controller
         if (await TryUpdateModelAsync<Instructor>(
                 instructorToUpdate,
                 "",
-                i => i.FirstMidName, i => i.LastName, i => i.HireDate, i => i.OfficeAssignment))
+                i => i.FirstMidName, i => i.LastName, i => i.Email, i => i.HireDate, i => i.OfficeAssignment))
         {
             if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment?.Location))
             {
                 instructorToUpdate.OfficeAssignment = null;
             }
+
             UpdateInstructorCourses(selectedCourses, instructorToUpdate);
             try
             {
@@ -183,14 +199,17 @@ public class InstructorsController : Controller
                                              "Try again, and if the problem persists, " +
                                              "see your system administrator.");
             }
+
             return RedirectToAction(nameof(Index));
         }
+
         UpdateInstructorCourses(selectedCourses, instructorToUpdate);
         PopulateAssignedCourseData(instructorToUpdate);
         return View(instructorToUpdate);
     }
-        
-    private void UpdateInstructorCourses(string[] selectedCourses, Instructor instructorToUpdate)
+
+    private void UpdateInstructorCourses(string[]   selectedCourses,
+                                         Instructor instructorToUpdate)
     {
         if (selectedCourses == null)
         {

@@ -25,4 +25,8 @@ public abstract class Person
             return LastName + ", " + FirstMidName;
         }
     }
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
 }

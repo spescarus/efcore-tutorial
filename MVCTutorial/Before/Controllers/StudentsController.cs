@@ -100,7 +100,7 @@ public class StudentsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("EnrollmentDate,FirstMidName,LastName")] Student student)
+        [Bind("EnrollmentDate,FirstMidName,LastName,Email")] Student student)
     {
         try
         {
@@ -152,7 +152,7 @@ public class StudentsController : Controller
         if (await TryUpdateModelAsync<Student>(
                 studentToUpdate,
                 "",
-                s => s.FirstMidName, s => s.LastName, s => s.EnrollmentDate))
+                s => s.FirstMidName, s => s.LastName, s => s.Email, s => s.EnrollmentDate))
         {
             try
             {

@@ -14,6 +14,7 @@
         <tr>
             <th>Last Name</th>
             <th>First Name</th>
+            <th>Email</th>
             <th>Hire Date</th>
             <th>Office</th>
             <th>Courses</th>
@@ -34,6 +35,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FirstMidName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.HireDate)

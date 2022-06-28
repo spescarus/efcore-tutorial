@@ -30,6 +30,9 @@
                 First Name
             </th>
             <th>
+                Email
+            </th>
+            <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Enrollment Date</a>
             </th>
             <th></th>
@@ -44,6 +47,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FirstMidName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EnrollmentDate)
