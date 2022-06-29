@@ -75,7 +75,6 @@
             <th></th>
             <th>Number</th>
             <th>Title</th>
-            <th>Department</th>
         </tr>
 
         @foreach (var item in Model.Courses)
@@ -94,9 +93,6 @@
                 </td>
                 <td>
                     @item.Title
-                </td>
-                <td>
-                    @item.Department.Name
                 </td>
             </tr>
         }

@@ -28,7 +28,6 @@ public class InstructorsController : Controller
                                               .Include(i => i.OfficeAssignment)
                                               .Include(i => i.CourseAssignments)
                                               .ThenInclude(i => i.Course)
-                                              .ThenInclude(i => i.Department)
                                               .OrderBy(i => i.LastName)
                                               .ToListAsync();
 
@@ -266,11 +265,6 @@ public class InstructorsController : Controller
         Instructor instructor = await _context.Instructors
                                               .Include(i => i.CourseAssignments)
                                               .SingleAsync(i => i.Id == id);
-
-        var departments = await _context.Departments
-                                        .Where(d => d.InstructorId == id)
-                                        .ToListAsync();
-        departments.ForEach(d => d.InstructorId = null);
 
         _context.Instructors.Remove(instructor);
 

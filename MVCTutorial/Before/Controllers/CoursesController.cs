@@ -21,7 +21,6 @@ public class CoursesController : Controller
     public async Task<IActionResult> Index()
     {
         var courses = _context.Courses
-                              .Include(c => c.Department)
                               .AsNoTracking();
         return View(await courses.ToListAsync());
     }
@@ -35,7 +34,6 @@ public class CoursesController : Controller
         }
 
         var course = await _context.Courses
-                                   .Include(c => c.Department)
                                    .AsNoTracking()
                                    .FirstOrDefaultAsync(m => m.CourseId == id);
         if (course == null)
@@ -49,7 +47,6 @@ public class CoursesController : Controller
     // GET: Courses/Create
     public IActionResult Create()
     {
-        PopulateDepartmentsDropDownList();
         return View();
     }
 
@@ -66,7 +63,6 @@ public class CoursesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        PopulateDepartmentsDropDownList(course.DepartmentId);
         return View(course);
     }
 
@@ -85,7 +81,6 @@ public class CoursesController : Controller
         {
             return NotFound();
         }
-        PopulateDepartmentsDropDownList(course.DepartmentId);
         return View(course);
     }
 
@@ -106,7 +101,7 @@ public class CoursesController : Controller
 
         if (await TryUpdateModelAsync<Course>(courseToUpdate,
                                               "",
-                                              c => c.Credits, c => c.DepartmentId, c => c.Title))
+                                              c => c.Credits, c => c.Title))
         {
             try
             {
@@ -121,17 +116,9 @@ public class CoursesController : Controller
                                              "see your system administrator.");
             }
         }
-        PopulateDepartmentsDropDownList(courseToUpdate.DepartmentId);
         return View(courseToUpdate);
     }
 
-    private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
-    {
-        var departmentsQuery = from d in _context.Departments
-                               orderby d.Name
-                               select d;
-        ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "Id", "Name", selectedDepartment);
-    }
 
     // GET: Courses/Delete/5
     public async Task<IActionResult> Delete(long? id)
@@ -142,7 +129,6 @@ public class CoursesController : Controller
         }
 
         var course = await _context.Courses
-                                   .Include(c => c.Department)
                                    .AsNoTracking()
                                    .FirstOrDefaultAsync(m => m.CourseId == id);
         if (course == null)

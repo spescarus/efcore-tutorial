@@ -15,11 +15,6 @@ public class Course
 
     [Range(0, 5)]
     public int Credits { get; set; }
-
-    [ForeignKey("Department")]
-    public long DepartmentId { get; set; }
-
-    public Department                    Department        { get; set; }
     public ICollection<Enrollment>       Enrollments       { get; set; }
     public ICollection<CourseAssignment> CourseAssignments { get; set; }
 }
