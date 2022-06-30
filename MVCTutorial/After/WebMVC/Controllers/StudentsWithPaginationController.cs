@@ -7,20 +7,74 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebMvc.Controllers;
 
-public class StudentsController : Controller
+public class StudentsWithPaginationController : Controller
 {
     private readonly IStudentService _studentService;
 
-    public StudentsController(IStudentService studentService)
+    public StudentsWithPaginationController(IStudentService studentService)
     {
         _studentService = studentService;
     }
 
-    public async Task<IActionResult> Index()
+    // GET: Students
+    public async Task<IActionResult> Index(string sortOrder,
+                                                            string currentFilter,
+                                                            string searchString,
+                                                            int?   pageNumber)
     {
-        var students = await _studentService.GetAllStudentsAsync();
+        ViewData["CurrentSort"] = sortOrder;
+        ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder)
+                                       ? "name_desc"
+                                       : "";
+        ViewData["DateSortParm"] = sortOrder == "Date"
+                                       ? "date_desc"
+                                       : "Date";
 
-        return View(students);
+        if (searchString != null)
+        {
+            pageNumber = 1;
+        }
+        else
+        {
+            searchString = currentFilter;
+        }
+
+        ViewData["CurrentFilter"] = searchString;
+
+        const int pageSize  = 3;
+        var       pageIndex = pageNumber ?? 1;
+
+        var searchArgs = new SearchArgs
+        {
+            SearchText = searchString,
+            Offset     = (pageIndex - 1) * pageSize,
+            Limit      = pageSize,
+            SortOption = new SortOptionArgs()
+        };
+
+        switch (sortOrder)
+        {
+            case "name_desc":
+                searchArgs.SortOption.SortOrder    = SortOrder.Descending;
+                searchArgs.SortOption.PropertyName = "LastName";
+                break;
+            case "Date":
+                searchArgs.SortOption.SortOrder    = SortOrder.Ascending;
+                searchArgs.SortOption.PropertyName = "EnrollmentDate";
+                break;
+            case "date_desc":
+                searchArgs.SortOption.SortOrder    = SortOrder.Descending;
+                searchArgs.SortOption.PropertyName = "EnrollmentDate";
+                break;
+            default:
+                searchArgs.SortOption.SortOrder    = SortOrder.Ascending;
+                searchArgs.SortOption.PropertyName = "LastName";
+                break;
+        }
+
+        var students = await _studentService.SearchStudentsAsync(searchArgs);
+
+        return View(PaginatedList<StudentResponse>.CreateAsync(students.Values, students.RecordsTotal, pageIndex, pageSize));
     }
 
     // GET: Students/Details/5

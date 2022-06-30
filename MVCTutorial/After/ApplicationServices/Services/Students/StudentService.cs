@@ -24,6 +24,23 @@ public sealed class StudentService : Service, IStudentService
         _unitOfWork        = unitOfWork;
     }
 
+    public async Task<IReadOnlyCollection<StudentResponse>> GetAllStudentsAsync()
+    {
+        var students = await _studentRepository.GetAllAsync();
+
+        var studentsResponse = students.Select(p => new StudentResponse
+                                        {
+                                            Id             = p.Id,
+                                            LastName       = p.Name.LastName,
+                                            FirstMidName   = p.Name.FirstMidName,
+                                            Email          = p.Email,
+                                            EnrollmentDate = p.EnrollmentDate
+                                        })
+                                       .ToList();
+
+        return studentsResponse;
+    }
+
     public async Task<PartialCollectionResponse<StudentResponse>> SearchStudentsAsync(SearchArgs searchArgs)
     {
         var students = await _studentRepository.SearchStudentsAsync(searchArgs);
@@ -61,32 +78,38 @@ public sealed class StudentService : Service, IStudentService
             LastName       = student.Name.LastName,
             FirstMidName   = student.Name.FirstMidName,
             Email          = student.Email,
-            EnrollmentDate = student.EnrollmentDate
+            EnrollmentDate = student.EnrollmentDate,
+            Enrollments = student.Enrollments.Select(p => new EnrollmentResponse
+            {
+                Grade       = p.Grade.HasValue? p.Grade.Value.ToString() : "No Grade",
+                CourseId    = p.CourseId,
+                CourseTitle = p.Course.Title
+            }).ToList()
         };
 
         return Result.Success(response);
     }
 
-    public async Task<Result<StudentResponse>> CreateAsync(CreateStudentRequest request)
+    public async Task<Result> CreateAsync(CreateStudentRequest request)
     {
 
         if (request == null)
-            return Result.Failure<StudentResponse>("Student information was not provided");
+            return Result.Failure("Student information was not provided");
 
         var name = PersonName.Create(request.FirstMidName, request.LastName);
 
         if (name.IsFailure)
-            return Result.Failure<StudentResponse>(name.Error);
+            return Result.Failure(name.Error);
 
         var email = Email.Create(request.Email);
 
         if (email.IsFailure)
-            return Result.Failure<StudentResponse>(email.Error);
+            return Result.Failure(email.Error);
 
         var student = Student.Create(name.Value, email.Value, request.EnrollmentDate);
 
         if (student.IsFailure)
-            return Result.Failure<StudentResponse>(student.Error);
+            return Result.Failure(student.Error);
 
         var scope = await _unitOfWork.CreateScopeAsync();
 
@@ -94,24 +117,7 @@ public sealed class StudentService : Service, IStudentService
         await scope.SaveAsync();
         await scope.CommitAsync();
 
-        var response = new StudentResponse
-        {
-            Id           = student.Value.Id,
-            LastName     = student.Value.Name.LastName,
-            FirstMidName = student.Value.Name.FirstMidName,
-            Email        = student.Value.Email,
-            Enrollments = student.Value.Enrollments.Select(p => new EnrollmentResponse
-                                  {
-                                      Grade = p.Grade.HasValue
-                                                  ? p.Grade.Value.ToString()
-                                                  : "No Grade",
-                                      CourseId    = p.CourseId,
-                                      CourseTitle = p.Course.Title
-                                  })
-                                 .ToList()
-        };
-
-        return Result.Success(response);
+        return Result.Success();
     }
 
     public async Task<Result> UpdateAsync(long                 studentId,

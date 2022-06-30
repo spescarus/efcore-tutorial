@@ -7,9 +7,10 @@ namespace ApplicationServices.Services.Students;
 
 public interface IStudentService
 {
+    Task<IReadOnlyCollection<StudentResponse>> GetAllStudentsAsync();
     Task<PartialCollectionResponse<StudentResponse>> SearchStudentsAsync(SearchArgs searchArgs);
     Task<Result<StudentResponse>> GetStudentDetailsAsync(long                       studentId);
-    Task<Result<StudentResponse>> CreateAsync(CreateStudentRequest                  request);
+    Task<Result> CreateAsync(CreateStudentRequest                                   request);
 
     Task<Result> UpdateAsync(long                 studentId,
                              UpdateStudentRequest request);
