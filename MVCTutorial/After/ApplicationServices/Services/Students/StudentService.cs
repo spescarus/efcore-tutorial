@@ -2,7 +2,6 @@
 using ApplicationServices.Services.Students.Responses;
 using Domain.Base;
 using Domain.Entities;
-using Domain.Entities.ValueObjects;
 using Domain.RepositoryInterfaces;
 using Domain.RepositoryInterfaces.Generics;
 using Domain.Search;
@@ -33,6 +32,7 @@ public sealed class StudentService : Service, IStudentService
                                             Id             = p.Id,
                                             LastName       = p.Name.LastName,
                                             FirstMidName   = p.Name.FirstMidName,
+                                            FullName       = p.FullName,
                                             Email          = p.Email,
                                             EnrollmentDate = p.EnrollmentDate
                                         })
@@ -47,10 +47,11 @@ public sealed class StudentService : Service, IStudentService
 
         var studentsResponse = students.Values.Select(p => new StudentResponse
                                         {
-                                            Id           = p.Id,
-                                            LastName     = p.Name.LastName,
-                                            FirstMidName = p.Name.FirstMidName,
-                                            Email        = p.Email,
+                                            Id             = p.Id,
+                                            LastName       = p.Name.LastName,
+                                            FirstMidName   = p.Name.FirstMidName,
+                                            FullName       = p.FullName,
+                                            Email          = p.Email,
                                             EnrollmentDate = p.EnrollmentDate
                                         })
                                        .ToList();
@@ -77,14 +78,18 @@ public sealed class StudentService : Service, IStudentService
             Id             = student.Id,
             LastName       = student.Name.LastName,
             FirstMidName   = student.Name.FirstMidName,
+            FullName       = student.FullName,
             Email          = student.Email,
             EnrollmentDate = student.EnrollmentDate,
             Enrollments = student.Enrollments.Select(p => new EnrollmentResponse
-            {
-                Grade       = p.Grade.HasValue? p.Grade.Value.ToString() : "No Grade",
-                CourseId    = p.CourseId,
-                CourseTitle = p.Course.Title
-            }).ToList()
+                                  {
+                                      Grade = p.Grade.HasValue
+                                                  ? p.Grade.Value.ToString()
+                                                  : "No Grade",
+                                      CourseId    = p.CourseId,
+                                      CourseTitle = p.Course.Title
+                                  })
+                                 .ToList()
         };
 
         return Result.Success(response);
@@ -92,21 +97,7 @@ public sealed class StudentService : Service, IStudentService
 
     public async Task<Result> CreateAsync(CreateStudentRequest request)
     {
-
-        if (request == null)
-            return Result.Failure("Student information was not provided");
-
-        var name = PersonName.Create(request.FirstMidName, request.LastName);
-
-        if (name.IsFailure)
-            return Result.Failure(name.Error);
-
-        var email = Email.Create(request.Email);
-
-        if (email.IsFailure)
-            return Result.Failure(email.Error);
-
-        var student = Student.Create(name.Value, email.Value, request.EnrollmentDate);
+        var student = Student.Create(request.FirstMidName, request.LastName, request.Email, request.EnrollmentDate);
 
         if (student.IsFailure)
             return Result.Failure(student.Error);
@@ -114,6 +105,7 @@ public sealed class StudentService : Service, IStudentService
         var scope = await _unitOfWork.CreateScopeAsync();
 
         await _studentRepository.AddAsync(student.Value);
+
         await scope.SaveAsync();
         await scope.CommitAsync();
 
@@ -123,20 +115,6 @@ public sealed class StudentService : Service, IStudentService
     public async Task<Result> UpdateAsync(long                 studentId,
                                           UpdateStudentRequest request)
     {
-
-        if (request == null)
-            return Result.Failure<StudentResponse>("Student information was not provided");
-
-        var name = PersonName.Create(request.FirstMidName, request.LastName);
-
-        if (name.IsFailure)
-            return Result.Failure<StudentResponse>(name.Error);
-
-        var email = Email.Create(request.Email);
-
-        if (email.IsFailure)
-            return Result.Failure<StudentResponse>(email.Error);
-
         var scope = await _unitOfWork.CreateScopeAsync();
 
         var student = await _studentRepository.GetStudentByIdAsync(studentId);
@@ -144,12 +122,13 @@ public sealed class StudentService : Service, IStudentService
         if (student == null)
             return Result.Failure<StudentResponse>($"Cannot find student with Id {studentId}");
 
-        var studentToUpdate = student.Update(name.Value, email.Value, request.EnrollmentDate);
+        var studentToUpdate = student.Update(request.FirstMidName, request.LastName, request.Email, request.EnrollmentDate);
 
         if (studentToUpdate.IsFailure)
             return Result.Failure<StudentResponse>(studentToUpdate.Error);
 
         await _studentRepository.UpdateAsync(studentToUpdate.Value);
+
         await scope.SaveAsync();
         await scope.CommitAsync();
 

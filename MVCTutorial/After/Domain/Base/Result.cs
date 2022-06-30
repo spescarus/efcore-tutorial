@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Domain.Base;
+﻿namespace Domain.Base;
 
 public class Result
 {

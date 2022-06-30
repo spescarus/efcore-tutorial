@@ -2,7 +2,9 @@
 
 public sealed class EnrollmentResponse
 {
-    public string Grade       { get; set; }
-    public long   CourseId    { get; set; }
-    public string CourseTitle { get; set; }
+    public long   Id              { get; set; }
+    public string Grade           { get; set; }
+    public long   CourseId        { get; set; }
+    public string CourseTitle     { get; set; }
+    public string StudentFullName { get; set; }
 }

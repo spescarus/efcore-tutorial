@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;

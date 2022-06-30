@@ -25,33 +25,44 @@ public class Student : Entity
     }
 
 
-    public static Result<Student> Create(PersonName name,
-                                  Email      email,
-                                  DateTime   enrollmentDate)
+    public static Result<Student> Create(string   firstMidName,
+                                         string   lastName,
+                                         string   studentEmail,
+                                         DateTime enrollmentDate)
     {
-        if (name == null)
-            return Result.Failure<Student>("Student name is mandatory");
 
-        if (email == null)
-            return Result.Failure<Student>("Email address is mandatory");
+        var name = PersonName.Create(firstMidName, lastName);
 
-        var student = new Student(name, email, enrollmentDate);
+        if (name.IsFailure)
+            return Result.Failure<Student>(name.Error);
+
+        var email = Email.Create(studentEmail);
+
+        if (email.IsFailure)
+            return Result.Failure<Student>(email.Error);
+
+        var student = new Student(name.Value, email.Value, enrollmentDate);
 
         return Result.Success(student);
     }
 
-    public Result<Student> Update(PersonName name,
-                                  Email      email,
-                                  DateTime   enrollmentDate)
+    public Result<Student> Update(string   firstMidName,
+                                  string   lastName,
+                                  string   studentEmail,
+                                  DateTime enrollmentDate)
     {
-        if (name == null)
-            return Result.Failure<Student>("Student name is mandatory");
+        var name = PersonName.Create(firstMidName, lastName);
 
-        if (email == null)
-            return Result.Failure<Student>("Email address is mandatory");
+        if (name.IsFailure)
+            return Result.Failure<Student>(name.Error);
 
-        Name = name;
-        Email          = email;
+        var email = Email.Create(studentEmail);
+
+        if (email.IsFailure)
+            return Result.Failure<Student>(email.Error);
+
+        Name           = name.Value;
+        Email          = email.Value;
         EnrollmentDate = enrollmentDate;
 
         return Result.Success(this);

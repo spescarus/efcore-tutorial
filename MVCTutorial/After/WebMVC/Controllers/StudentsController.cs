@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ApplicationServices.Services.Students;
 using ApplicationServices.Services.Students.Requests;
-using ApplicationServices.Services.Students.Responses;
-using Domain.Search;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebMvc.Controllers;

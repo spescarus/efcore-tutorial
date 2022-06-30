@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Persistence.Context;
+﻿namespace Persistence.Context;
 
 public class DbInitializer
 {

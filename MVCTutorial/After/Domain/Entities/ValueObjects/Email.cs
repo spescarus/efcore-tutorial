@@ -1,68 +1,67 @@
 ﻿using System.Text.RegularExpressions;
 using Domain.Base;
 
-namespace Domain.Entities.ValueObjects
+namespace Domain.Entities.ValueObjects;
+
+public sealed class Email : ValueObject<Email>
 {
-    public sealed class Email : ValueObject<Email>
+    public string Value { get; }
+
+    private Email(string value)
     {
-        public string Value { get; }
+        Value = value;
+    }
 
-        private Email(string value)
+    public static Result<Email> Create(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
         {
-            Value = value;
+            return Result.Failure<Email>("Email should not be empty");
         }
 
-        public static Result<Email> Create(string email)
+        email = email.Trim();
+
+        if (email.Length >= 256)
         {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return Result.Failure<Email>("Email should not be empty");
-            }
-
-            email = email.Trim();
-
-            if (email.Length >= 256)
-            {
-                return Result.Failure<Email>("Email is too long");
-            }
-
-            if (!IsEmailValid(email))
-            {
-                return Result.Failure<Email>("Email is invalid!");
-            }
-
-            return Result.Success(new Email(email));
+            return Result.Failure<Email>("Email is too long");
         }
 
-        public static explicit operator Email(string email)
+        if (!IsEmailValid(email))
         {
-            return Create(email).Value;
+            return Result.Failure<Email>("Email is invalid!");
         }
 
-        public static implicit operator string(Email email)
-        {
-            return email.Value;
-        }
+        return Result.Success(new Email(email));
+    }
 
-        protected override bool EqualsCore(Email other)
-        {
-            return Value.Equals(other.Value, StringComparison.InvariantCultureIgnoreCase);
-        }
+    public static explicit operator Email(string email)
+    {
+        return Create(email).Value;
+    }
 
-        protected override int GetHashCodeCore()
-        {
-            return Value.GetHashCode();
-        }
+    public static implicit operator string(Email email)
+    {
+        return email.Value;
+    }
 
-        private static bool IsEmailValid(string email)
-        {
-            const string pattern = @"^(.+)@(.+)$";
-            const RegexOptions options = RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture;
+    protected override bool EqualsCore(Email other)
+    {
+        return Value.Equals(other.Value, StringComparison.InvariantCultureIgnoreCase);
+    }
 
-            var matchTimeout = TimeSpan.FromSeconds(2);
+    protected override int GetHashCodeCore()
+    {
+        return Value.GetHashCode();
+    }
 
-            var regex = new Regex(pattern, options, matchTimeout);
-            return regex.IsMatch(email);
-        }
+    private static bool IsEmailValid(string email)
+    {
+        const string       pattern = @"^(.+)@(.+)$";
+        const RegexOptions options = RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture;
+
+        var matchTimeout = TimeSpan.FromSeconds(2);
+
+        var regex = new Regex(pattern, options, matchTimeout);
+        return regex.IsMatch(email);
     }
 }

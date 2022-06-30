@@ -1,11 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ApplicationServices.Services.Courses;
 using ApplicationServices.Services.Courses.Requests;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebMvc.Controllers;
 

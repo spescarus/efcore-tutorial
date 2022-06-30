@@ -44,7 +44,7 @@ public sealed class StudentRepository : RepositoryWithSearch<Student>, IStudentR
                    : await GetAllByAsync(predicate, searchArgs.SortOption.SortOrder, sortOrder, searchArgs.Offset, searchArgs.Limit);
     }
 
-    public async Task<Student> GetStudentByIdAsync(long studentId)
+    public async Task<Student?> GetStudentByIdAsync(long studentId)
     {
         var student =  await GetByIdAsync(studentId);
 
