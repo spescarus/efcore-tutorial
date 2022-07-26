@@ -24,8 +24,5 @@ public class SchoolContext : DbContext
         modelBuilder.Entity<Instructor>().ToTable("Instructors");
         modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignments");
         modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignments");
-
-        modelBuilder.Entity<CourseAssignment>()
-                    .HasKey(c => new { CourseID = c.CourseId, InstructorID = c.InstructorId });
     }
 }

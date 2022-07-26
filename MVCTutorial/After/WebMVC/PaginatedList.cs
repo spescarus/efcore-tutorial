@@ -28,10 +28,6 @@ public class PaginatedList<T> : List<T>
                                                int                    pageIndex,
                                                int                    pageSize)
     {
-        // var count = await source.CountAsync();
-        // var items = await source.Skip((offset - 1) * limit)
-        //                         .Take(limit)
-        //                         .ToListAsync();
         return new PaginatedList<T>(items, totalRecords, pageIndex, pageSize);
     }
 }

@@ -30,8 +30,8 @@ public class Startup
             options.MinimumSameSitePolicy = SameSiteMode.None;
         });
 
-        services.AddDbContext<EfCoreContext>(options =>
-                                                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        var connectionString = Configuration.GetConnectionString("DefaultConnection");
+        services.AddDatabase(connectionString);
         services.AddRepositories();
         services.AddServices();
 

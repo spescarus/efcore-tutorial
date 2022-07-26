@@ -10,7 +10,11 @@ public sealed class CourseAssignmentTypeConfiguration : IEntityTypeConfiguration
     {
         builder.ToTable("CourseAssignments");
 
-        builder.HasKey(p => p.InstructorId);
+        builder.HasKey(p => p.Id);
+
+        builder.Property(p => p.Id)
+               .HasColumnName("Id")
+               .IsRequired();
 
         builder.Property(p => p.InstructorId)
                .ValueGeneratedNever()

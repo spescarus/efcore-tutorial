@@ -137,12 +137,12 @@ public sealed class StudentService : Service, IStudentService
 
     public async Task<Result> DeleteAsync(long studentId)
     {
+        var scope = await _unitOfWork.CreateScopeAsync();
+
         var student = await _studentRepository.GetStudentByIdAsync(studentId);
 
         if (student == null)
             return Result.Failure($"Cannot find student with Id {studentId}");
-
-        var scope = await _unitOfWork.CreateScopeAsync();
 
         _studentRepository.Delete(student);
 

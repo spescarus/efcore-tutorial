@@ -38,6 +38,23 @@ public class EnrollmentService : Service, IEnrollmentService
         return response;
     }
 
+    public async Task<IReadOnlyCollection<EnrollmentResponse>> GetEnrollmentsForCourseAsync(long courseId)
+    {
+        var enrollments = await _enrollmentRepository.GetEnrollmentsForCourseAsync(courseId);
+
+        var response = enrollments.Select(p => new EnrollmentResponse
+        {
+            Id              = p.Id,
+            Grade           = p.Grade.HasValue ? p.Grade.Value.ToString() : "",
+            CourseId        = p.CourseId,
+            CourseTitle     = p.Course.Title,
+            StudentFullName = p.Student.FullName
+        }).ToList();
+
+        return response;
+    }
+
+
     public async Task<Result<EnrollmentResponse>> GetEnrollmentDetailsAsync(long enrollmentId)
     {
         var enrollment = await _enrollmentRepository.GetEnrollmentAsync(enrollmentId);

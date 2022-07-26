@@ -24,6 +24,18 @@ internal class EnrollmentRepository : Repository<Enrollment>, IEnrollmentReposit
         return await GetAllAsync(includes);
     }
 
+    public async Task<IReadOnlyCollection<Enrollment>> GetEnrollmentsForCourseAsync(long courseId)
+    {
+        Expression<Func<Enrollment, object>>[] includes =
+        {
+            p => p.Student
+        };
+
+        Expression<Func<Enrollment, bool>> predicate = p => p.CourseId == courseId;
+
+        return await GetAllByAsync(predicate, includes);
+    }
+
     public async Task<Enrollment?> GetEnrollmentAsync(long enrollmentId)
     {
         Expression<Func<Enrollment, object>>[] includes =

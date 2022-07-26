@@ -20,7 +20,7 @@ public sealed class InstructorTypeConfiguration : BasicEntityTypeConfiguration<I
         builder.OwnsOne(p => p.Name, name =>
         {
             name.Property(pp => pp.FirstMidName)
-                .HasColumnName("FirstMidName")
+                .HasColumnName("FirstName")
                 .HasMaxLength(50)
                 .IsRequired();
 

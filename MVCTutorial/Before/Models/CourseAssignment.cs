@@ -2,8 +2,9 @@
 
 public class CourseAssignment
 {
-    public long        InstructorId { get; set; }
-    public long        CourseId     { get; set; }
+    public long       Id           { get; set; }
+    public long       InstructorId { get; set; }
+    public long       CourseId     { get; set; }
     public Instructor Instructor   { get; set; }
     public Course     Course       { get; set; }
 }

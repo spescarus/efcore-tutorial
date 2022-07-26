@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Base;
 
-public class CourseAssignment
+namespace Domain.Entities;
+
+public class CourseAssignment : Entity
 {
     public long       InstructorId { get; set; }
     public long       CourseId     { get; set; }

@@ -89,23 +89,23 @@ public class StudentsController : Controller
         if (id == null)
             return NotFound();
 
-        var studentToUpdate = new UpdateStudentRequest();
+        var updateStudentRequest = new UpdateStudentRequest();
 
         if (await TryUpdateModelAsync(
-                studentToUpdate,
+                updateStudentRequest,
                 "",
                 s => s.FirstMidName, s => s.LastName, s => s.Email, s => s.EnrollmentDate))
         {
-            var result = await _studentService.UpdateAsync(id.Value, studentToUpdate);
+            var result = await _studentService.UpdateAsync(id.Value, updateStudentRequest);
 
             if (result.IsSuccess)
                 return RedirectToAction(nameof(Index));
 
             ModelState.AddModelError("", $"Unable to save changes. {result.Error}");
-            return View(studentToUpdate);
+            return View(updateStudentRequest);
         }
 
-        return View(studentToUpdate);
+        return View(updateStudentRequest);
     }
 
     // GET: Students/Delete/5
