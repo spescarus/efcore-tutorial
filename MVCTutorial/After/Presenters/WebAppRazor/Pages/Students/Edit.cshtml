@@ -1,0 +1,47 @@
+﻿@page "/students/{id:long}/edit"
+@model WebApp.Pages.Students.EditModel
+@{
+}
+
+<h1>Edit</h1>
+
+<h4>Student</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-page="Edit" asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StudentToUpdate.LastName" class="control-label"></label>
+                <input asp-for="StudentToUpdate.LastName" class="form-control" />
+                <span asp-validation-for="StudentToUpdate.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentToUpdate.FirstMidName" class="control-label"></label>
+                <input asp-for="StudentToUpdate.FirstMidName" class="form-control" />
+                <span asp-validation-for="StudentToUpdate.FirstMidName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentToUpdate.Email" class="control-label"></label>
+                <input asp-for="StudentToUpdate.Email" class="form-control" />
+                <span asp-validation-for="StudentToUpdate.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentToUpdate.EnrollmentDate" class="control-label"></label>
+                <input asp-for="StudentToUpdate.EnrollmentDate" class="form-control" />
+                <span asp-validation-for="StudentToUpdate.EnrollmentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

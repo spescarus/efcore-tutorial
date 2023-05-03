@@ -8,9 +8,8 @@ public sealed class OfficeAssignmentTypeConfiguration : BasicEntityTypeConfigura
 {
     protected override void ConfigureEntity(EntityTypeBuilder<OfficeAssignment> builder)
     {
-        builder.ToTable("OfficeAssignments");
-
-        builder.HasKey(p => p.Id);
+        builder.ToTable("OfficeAssignments")
+               .HasKey(p => p.Id);
 
         builder.Property(p => p.Id)
                .HasColumnName("Id")
@@ -20,8 +19,8 @@ public sealed class OfficeAssignmentTypeConfiguration : BasicEntityTypeConfigura
                .HasColumnName("InstructorId")
                .IsRequired();
 
-        builder.HasOne(p => p.Instructor)
-               .WithOne(p => p.OfficeAssignment)
-               .HasForeignKey<OfficeAssignment>(fk => fk.InstructorId);
+        builder.Property(p => p.Location)
+               .HasColumnName("Location")
+               .IsRequired();
     }
 }

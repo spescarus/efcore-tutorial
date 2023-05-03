@@ -9,9 +9,8 @@ public sealed class InstructorTypeConfiguration : BasicEntityTypeConfiguration<I
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Instructor> builder)
     {
-        builder.ToTable("Instructors");
-
-        builder.HasKey(p => p.Id);
+        builder.ToTable("Instructors")
+               .HasKey(p => p.Id);
 
         builder.Property(p => p.Id)
                .HasColumnName("Id")
@@ -42,5 +41,22 @@ public sealed class InstructorTypeConfiguration : BasicEntityTypeConfiguration<I
         builder.Property(p => p.HireDate)
                .HasColumnName("HireDate")
                .IsRequired();
+
+        builder.HasMany(p => p.Courses)
+               .WithMany(p => p.Instructors)
+               .UsingEntity("CourseAssignments",
+                            l => l.HasOne(typeof(Course))
+                                  .WithMany()
+                                  .HasForeignKey("CourseId")
+                                  .HasPrincipalKey(nameof(Course.Id)),
+                            r => r.HasOne(typeof(Instructor))
+                                  .WithMany()
+                                  .HasForeignKey("InstructorId")
+                                  .HasPrincipalKey(nameof(Instructor.Id)),
+                            j => j.HasKey("CourseId", "InstructorId"));
+
+        builder.HasOne(p => p.OfficeAssignment)
+               .WithOne()
+               .HasForeignKey<OfficeAssignment>(p => p.InstructorId);
     }
 }

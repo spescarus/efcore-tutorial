@@ -41,9 +41,9 @@ public class InstructorsController : Controller
 
         if (courseId != null)
         {
-            ViewData["CourseId"] = courseId.Value;
+            ViewData["Id"] = courseId.Value;
             var selectedCourse = viewModel.Courses
-                                          .Single(x => x.CourseId == courseId);
+                                          .Single(x => x.Id == courseId);
             await _context.Entry(selectedCourse)
                           .Collection(x => x.Enrollments)
                           .LoadAsync();
@@ -146,9 +146,9 @@ public class InstructorsController : Controller
         {
             viewModel.Add(new AssignedCourseData
             {
-                CourseId = course.CourseId,
+                CourseId = course.Id,
                 Title    = course.Title,
-                Assigned = instructorCourses.Contains(course.CourseId)
+                Assigned = instructorCourses.Contains(course.Id)
             });
         }
 
@@ -217,22 +217,22 @@ public class InstructorsController : Controller
 
         var selectedCoursesHS = new HashSet<string>(selectedCourses);
         var instructorCourses = new HashSet<long>
-            (instructorToUpdate.CourseAssignments.Select(c => c.Course.CourseId));
+            (instructorToUpdate.CourseAssignments.Select(c => c.Course.Id));
         foreach (var course in _context.Courses)
         {
-            if (selectedCoursesHS.Contains(course.CourseId.ToString()))
+            if (selectedCoursesHS.Contains(course.Id.ToString()))
             {
-                if (!instructorCourses.Contains(course.CourseId))
+                if (!instructorCourses.Contains(course.Id))
                 {
-                    instructorToUpdate.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToUpdate.Id, CourseId = course.CourseId });
+                    instructorToUpdate.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToUpdate.Id, CourseId = course.Id });
                 }
             }
             else
             {
 
-                if (instructorCourses.Contains(course.CourseId))
+                if (instructorCourses.Contains(course.Id))
                 {
-                    CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.FirstOrDefault(i => i.CourseId == course.CourseId);
+                    CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.FirstOrDefault(i => i.CourseId == course.Id);
                     _context.Remove(courseToRemove);
                 }
             }

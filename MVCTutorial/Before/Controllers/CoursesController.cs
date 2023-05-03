@@ -35,7 +35,7 @@ public class CoursesController : Controller
 
         var course = await _context.Courses
                                    .AsNoTracking()
-                                   .FirstOrDefaultAsync(m => m.CourseId == id);
+                                   .FirstOrDefaultAsync(m => m.Id == id);
         if (course == null)
         {
             return NotFound();
@@ -55,7 +55,7 @@ public class CoursesController : Controller
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("CourseId,Credits,DepartmentId,Title")] Course course)
+    public async Task<IActionResult> Create([Bind("Id,Credits,DepartmentId,Title")] Course course)
     {
         if (ModelState.IsValid)
         {
@@ -76,7 +76,7 @@ public class CoursesController : Controller
 
         var course = await _context.Courses
                                    .AsNoTracking()
-                                   .FirstOrDefaultAsync(m => m.CourseId == id);
+                                   .FirstOrDefaultAsync(m => m.Id == id);
         if (course == null)
         {
             return NotFound();
@@ -97,7 +97,7 @@ public class CoursesController : Controller
         }
 
         var courseToUpdate = await _context.Courses
-                                           .FirstOrDefaultAsync(c => c.CourseId == id);
+                                           .FirstOrDefaultAsync(c => c.Id == id);
 
         if (await TryUpdateModelAsync<Course>(courseToUpdate,
                                               "",
@@ -130,7 +130,7 @@ public class CoursesController : Controller
 
         var course = await _context.Courses
                                    .AsNoTracking()
-                                   .FirstOrDefaultAsync(m => m.CourseId == id);
+                                   .FirstOrDefaultAsync(m => m.Id == id);
         if (course == null)
         {
             return NotFound();
@@ -170,6 +170,6 @@ public class CoursesController : Controller
 
     private bool CourseExists(long id)
     {
-        return _context.Courses.Any(e => e.CourseId == id);
+        return _context.Courses.Any(e => e.Id == id);
     }
 }

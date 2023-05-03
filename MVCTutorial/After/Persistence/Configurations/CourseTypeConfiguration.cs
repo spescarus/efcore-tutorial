@@ -8,12 +8,11 @@ public sealed class CourseTypeConfiguration : IEntityTypeConfiguration<Course>
 {
     public void Configure(EntityTypeBuilder<Course> builder)
     {
-        builder.ToTable("Courses");
+        builder.ToTable("Courses")
+               .HasKey(p => p.Id);
 
-        builder.HasKey(p => p.CourseId);
-
-        builder.Property(p => p.CourseId)
-               .HasColumnName("CourseId")
+        builder.Property(p => p.Id)
+               .HasColumnName("Id")
                .ValueGeneratedNever()
                .IsRequired();
 

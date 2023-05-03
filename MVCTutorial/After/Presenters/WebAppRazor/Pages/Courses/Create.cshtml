@@ -1,0 +1,43 @@
+﻿@page "/courses/create"
+@model WebApp.Pages.Courses.CreateModel
+@{
+}
+
+<h1>Create</h1>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-page="./Create" asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Course Number</label>
+                <input asp-for="CourseToCreate.CourseId" class="form-control" />
+                <span asp-validation-for="CourseToCreate.CourseId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseToCreate.Title" class="control-label"></label>
+                <input asp-for="CourseToCreate.Title" class="form-control" />
+                <span asp-validation-for="CourseToCreate.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseToCreate.Credits" class="control-label"></label>
+                <input asp-for="CourseToCreate.Credits" class="form-control" />
+                <span asp-validation-for="CourseToCreate.Credits" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}
+

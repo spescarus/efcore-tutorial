@@ -5,20 +5,20 @@ namespace Domain.Entities;
 
 public class Instructor : Entity
 {
-    public PersonName                    Name              { get; private set; }
-    public string                        FullName          => Name.LastName + " " + Name.FirstMidName;
-    public Email                         Email             { get; private set; }
-    public DateTime                      HireDate          { get; private set; }
-    public ICollection<CourseAssignment> CourseAssignments { get; private set; }
-    public OfficeAssignment?             OfficeAssignment  { get; private set; }
+    public Name                Name             { get; private set; }
+    public string              FullName         => Name.LastName + " " + Name.FirstMidName;
+    public Email               Email            { get; private set; }
+    public DateTime            HireDate         { get; private set; }
+    public ICollection<Course> Courses          { get; private set; } = new List<Course>();
+    public OfficeAssignment?   OfficeAssignment { get; private set; }
 
     private Instructor()
     {
     }
 
-    private Instructor(PersonName name,
-                       Email      email,
-                       DateTime   hireDate)
+    private Instructor(Name     name,
+                       Email    email,
+                       DateTime hireDate)
     {
         Name     = name;
         Email    = email;
@@ -27,11 +27,11 @@ public class Instructor : Entity
 
 
     public static Result<Instructor> Create(string   firstMidName,
-                                     string   lastName,
-                                     string    instructorEmail,
-                                     DateTime hireDate)
+                                            string   lastName,
+                                            string   instructorEmail,
+                                            DateTime hireDate)
     {
-        var name = PersonName.Create(firstMidName, lastName);
+        var name = Name.Create(firstMidName, lastName);
 
         if (name.IsFailure)
             return Result.Failure<Instructor>(name.Error);
@@ -47,11 +47,11 @@ public class Instructor : Entity
     }
 
     public Result<Instructor> Update(string   firstMidName,
-                         string   lastName,
-                         string   instructorEmail,
-                         DateTime hireDate)
+                                     string   lastName,
+                                     string   instructorEmail,
+                                     DateTime hireDate)
     {
-        var name = PersonName.Create(firstMidName, lastName);
+        var name = Name.Create(firstMidName, lastName);
 
         if (name.IsFailure)
             return Result.Failure<Instructor>(name.Error);
@@ -68,47 +68,39 @@ public class Instructor : Entity
         return Result.Success(this);
     }
 
-    public void AddOrUpdateOffice(string officeLocation)
+    public void AddOrUpdateOffice(string? officeLocation)
     {
         if (string.IsNullOrWhiteSpace(officeLocation))
         {
             return;
         }
 
-        OfficeAssignment ??= new OfficeAssignment
-        {
-            Location = officeLocation
-        };
+        OfficeAssignment          ??= new OfficeAssignment();
+        OfficeAssignment.Location =   officeLocation;
     }
 
-    public Result AssignCourses(ICollection<long> courseIds)
+    public Result AddOrUpdateCourses(ICollection<Course> courses)
     {
-        if (!courseIds.Any())
+        if (!courses.Any())
         {
             return Result.Failure("At least one course need to be assigned to an instructor.");
         }
 
-        CourseAssignments ??= new List<CourseAssignment>();
-
-        foreach (var courseId in courseIds)
+        foreach (var course in courses)
         {
-            var courseAssignment = CourseAssignments.SingleOrDefault(p => p.CourseId == courseId);
+            var existingCourse = Courses.SingleOrDefault(p => p.Id == course.Id);
 
-            if (courseAssignment == null)
+            if (existingCourse == null)
             {
-                CourseAssignments.Add(new CourseAssignment
-                {
-                    CourseId     = courseId,
-                    InstructorId = Id
-                });
+                Courses.Add(course);
             }
         }
 
-        var coursesToRemove = CourseAssignments.Where(p => courseIds.All(pp => pp != p.CourseId));
-        
+        var coursesToRemove = Courses.Where(p => courses.All(pp => pp.Id != p.Id));
+
         foreach (var courseAssignment in coursesToRemove)
         {
-            CourseAssignments.Remove(courseAssignment);
+            Courses.Remove(courseAssignment);
         }
 
         return Result.Success();

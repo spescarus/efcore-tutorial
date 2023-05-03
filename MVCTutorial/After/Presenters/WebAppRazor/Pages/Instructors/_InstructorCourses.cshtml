@@ -1,0 +1,47 @@
+﻿@page "/instructors/{instructorId:long}/courses"
+@model WebApp.Pages.Instructors.InstructorCoursesModel
+@{
+    Layout = null;
+}
+
+<h3>Courses Taught by Selected Instructor</h3>
+<table id="tblInstructorCourses" class="table">
+    <tr>
+        <th></th>
+        <th>Number</th>
+        <th>Title</th>
+    </tr>
+
+    @foreach (var item in Model.Courses)
+    {
+        <tr>
+            <td>
+                @Html.HiddenFor(modelItem => item.CourseId)
+            </td>
+            <td>
+                <button class="btn btn-secondary loadEnrollments">Select</button>
+            </td>
+            <td>
+                @item.CourseId
+            </td>
+            <td>
+                @item.CourseName
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script>
+        $(function () {
+
+        $('#tblInstructorCourses tbody').on('click', '.loadEnrollments', function () {
+                var row = $(this).closest('tr');
+
+            var CourseId = $(row).find('td input[name*="CourseId"]').val()
+            var url = "/instructors/" + @Model.InstructorId + "/courses/" + CourseId;
+            $('div#InstructorCourseEnrollments').load(url);
+            });
+
+        });
+</script>

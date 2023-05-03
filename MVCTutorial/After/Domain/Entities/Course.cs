@@ -2,23 +2,23 @@
 
 namespace Domain.Entities;
 
-public class Course
+public class Course : Entity
 {
-    public long                          CourseId          { get; private set; }
-    public string                        Title             { get; private set; }
-    public int                           Credits           { get; private set; }
-    public ICollection<Enrollment>       Enrollments       { get; private set; }
-    public ICollection<CourseAssignment> CourseAssignments { get; private set; }
+    public string                  Title       { get; private set; }
+    public int                     Credits     { get; private set; }
+    public ICollection<Instructor> Instructors { get; private set; }
 
-    private Course(){}
 
-    private Course(long   courseId,
-                   string title,
-                   int    credits)
+    private Course()
     {
-        CourseId     = courseId;
-        Title        = title;
-        Credits      = credits;
+    }
+
+    private Course(long   id,
+                   string title,
+                   int    credits) : base(id)
+    {
+        Title    = title;
+        Credits  = credits;
     }
 
     public static Result<Course> Create(long   courseId,
@@ -54,8 +54,8 @@ public class Course
         if (credits is < 0 or > 5)
             return Result.Failure<Course>("Course credits are between 0 and 5");
 
-        Title        = title;
-        Credits      = credits;
+        Title   = title;
+        Credits = credits;
 
         return Result.Success(this);
     }

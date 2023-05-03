@@ -1,0 +1,42 @@
+﻿@page "/courses/{id:long}/edit"
+@model WebApp.Pages.Courses.EditModel
+@{
+}
+
+<h1>Edit</h1>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-page="./Edit" asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Course Number</label>
+                <div>@Model.CourseNumber</div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseToUpdate.Title" class="control-label"></label>
+                <input asp-for="CourseToUpdate.Title" class="form-control" />
+                <span asp-validation-for="CourseToUpdate.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseToUpdate.Credits" class="control-label"></label>
+                <input asp-for="CourseToUpdate.Credits" class="form-control" />
+                <span asp-validation-for="CourseToUpdate.Credits" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}
+

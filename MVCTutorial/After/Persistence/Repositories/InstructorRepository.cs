@@ -22,8 +22,7 @@ public sealed class InstructorRepository : Repository<Instructor>, IInstructorRe
 
     protected override IQueryable<Instructor> DefaultIncludes(IQueryable<Instructor> queryable)
     {
-        queryable = queryable.Include(p => p.CourseAssignments)
-                             .ThenInclude(p => p.Course)
+        queryable = queryable.Include(p => p.Courses)
                              .Include(p => p.OfficeAssignment);
 
         return queryable;

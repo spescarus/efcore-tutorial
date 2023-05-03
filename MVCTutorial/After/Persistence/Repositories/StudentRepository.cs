@@ -51,7 +51,7 @@ public sealed class StudentRepository : RepositoryWithSearch<Student>, IStudentR
         await Context.Entry(student)
                .Collection(p => p.Enrollments)
                .Query()
-               .Includes(p => p.Course)
+               .Include(p => p.Course)
                .LoadAsync();
 
         return student;

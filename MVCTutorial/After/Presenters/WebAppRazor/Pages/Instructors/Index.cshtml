@@ -1,0 +1,89 @@
+﻿@page ""
+@model WebApp.Pages.Instructors.IndexModel
+@{
+}
+
+<p>
+    <a asp-page="./Create">Create New</a>
+</p>
+<table id="Instructors" class="table">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Email</th>
+        <th>Hire Date</th>
+        <th>Office</th>
+        <th>Courses</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Instructors)
+        {
+            <tr>
+                <td>
+                    @Html.HiddenFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstMidName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HireDate)
+                </td>
+                <td>
+                    @if (item.OfficeAssignment != null)
+                    {
+                        @item.OfficeAssignment.Location
+                    }
+                </td>
+                <td>
+                    @{
+                        foreach (var course in item.CourseAssignments)
+                        {
+                                                @course.CourseId
+                                                @: @course.CourseName <br/>
+                        }
+                    }
+                </td>
+                <td>
+                    <button class="btn btn-secondary loadCourses">Select</button> |
+                    
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="InstructorCourses"></div>
+<div id="InstructorCourseEnrollments"></div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+
+            $('#Instructors tbody').on('click', '.loadCourses', function () {
+                $('div#InstructorCourses').empty();
+                $('div#InstructorCourseEnrollments').empty();
+
+                    var row = $(this).closest('tr');
+
+                    var Id = $(row).find('td input[name*="Id"]').val()
+                    var url = "/instructors/" + Id + "/courses";
+                    $('div#InstructorCourses').load(url);
+                });
+
+        });
+    </script>
+}

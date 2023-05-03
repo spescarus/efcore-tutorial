@@ -1,9 +1,11 @@
-﻿using Domain.RepositoryInterfaces;
+﻿using Domain.GetawayInterfaces;
+using Domain.RepositoryInterfaces;
 using Domain.RepositoryInterfaces.Generics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Context;
 using Persistence.Generics;
+using Persistence.Getaways.Instructors;
 using Persistence.Repositories;
 
 namespace Persistence;
@@ -22,5 +24,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
         services.AddScoped<IInstructorRepository, InstructorRepository>();
+
+        services.AddScoped<IInstructorDetailsGetaway, InstructorDetailsGetaway>();
+        services.AddScoped<ICreateInstructorGateway, CreateInstructorGateway>();
+        services.AddScoped<IUpdateInstructorGateway, UpdateInstructorGateway>();
+        services.AddScoped<IDeleteInstructorGateway, DeleteInstructorGetaway>();
+
     }
 }

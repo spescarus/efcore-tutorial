@@ -23,6 +23,17 @@ public class SchoolContext : DbContext
         modelBuilder.Entity<Student>().ToTable("Students");
         modelBuilder.Entity<Instructor>().ToTable("Instructors");
         modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignments");
-        modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignments");
+        modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignments")
+                    .HasKey(p => new {p.CourseId, p.InstructorId});
+
+        modelBuilder.Entity<CourseAssignment>()
+                    .HasOne(p => p.Course)
+                    .WithMany(p => p.CourseAssignments)
+                    .HasForeignKey(fk => fk.CourseId);
+
+        modelBuilder.Entity<CourseAssignment>()
+                    .HasOne(p => p.Instructor)
+                    .WithMany(p => p.CourseAssignments)
+                    .HasForeignKey(fk => fk.InstructorId);
     }
 }

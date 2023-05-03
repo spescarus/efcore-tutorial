@@ -8,7 +8,7 @@ public class Course
 {
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Display(Name = "Number")]
-    public long CourseId { get; set; }
+    public long Id { get; set; }
 
     [StringLength(50, MinimumLength = 3)]
     public string Title { get; set; }

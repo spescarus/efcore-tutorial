@@ -25,7 +25,7 @@ public sealed class CourseRepository : ICourseRepository
     {
         var courseDbSet = _context.Set<Course>();
 
-        return await courseDbSet.Where(p => p.CourseId == courseId)
+        return await courseDbSet.Where(p => p.Id == courseId)
                                 .FirstOrDefaultAsync();
     }
 
@@ -33,7 +33,7 @@ public sealed class CourseRepository : ICourseRepository
     {
         var courseDbSet = _context.Set<Course>();
 
-        return courseDbSet.AnyAsync(p => p.CourseId == id);
+        return courseDbSet.AnyAsync(p => p.Id == id);
     }
 
     public async Task<Course> AddAsync(Course entity)

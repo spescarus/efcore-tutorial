@@ -51,7 +51,7 @@ public class EnrollmentsController : Controller
     // GET: Enrollments/Create
     public IActionResult Create()
     {
-        ViewData["CourseId"]  = new SelectList(_context.Courses,  "CourseId", "Title");
+        ViewData["Id"]  = new SelectList(_context.Courses,  "Id", "Title");
         ViewData["StudentId"] = new SelectList(_context.Students, "Id",       "FullName");
         return View();
     }
@@ -61,7 +61,7 @@ public class EnrollmentsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,CourseId,StudentId,Grade")] Enrollment enrollment)
+    public async Task<IActionResult> Create([Bind("Id,Id,StudentId,Grade")] Enrollment enrollment)
     {
         if (ModelState.IsValid)
         {
@@ -70,7 +70,7 @@ public class EnrollmentsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        ViewData["CourseId"]  = new SelectList(_context.Courses,  "CourseId", "Title",    enrollment.CourseId);
+        ViewData["Id"]  = new SelectList(_context.Courses,  "Id", "Title",    enrollment.CourseId);
         ViewData["StudentId"] = new SelectList(_context.Students, "Id",       "FullName", enrollment.StudentId);
         return View(enrollment);
     }
@@ -90,7 +90,7 @@ public class EnrollmentsController : Controller
             return NotFound();
         }
 
-        ViewData["CourseId"]  = new SelectList(_context.Courses,  "CourseId", "CourseId", enrollment.CourseId);
+        ViewData["Id"]  = new SelectList(_context.Courses,  "Id", "Id", enrollment.CourseId);
         ViewData["StudentId"] = new SelectList(_context.Students, "Id",       "Email",    enrollment.StudentId);
         return View(enrollment);
     }
@@ -101,7 +101,7 @@ public class EnrollmentsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(long                                             id,
-                                          [Bind("Id,CourseId,StudentId,Grade")] Enrollment enrollment)
+                                          [Bind("Id,Id,StudentId,Grade")] Enrollment enrollment)
     {
         if (id != enrollment.Id)
         {
@@ -130,7 +130,7 @@ public class EnrollmentsController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        ViewData["CourseId"]  = new SelectList(_context.Courses,  "CourseId", "CourseId", enrollment.CourseId);
+        ViewData["Id"]  = new SelectList(_context.Courses,  "Id", "Id", enrollment.CourseId);
         ViewData["StudentId"] = new SelectList(_context.Students, "Id",       "Email",    enrollment.StudentId);
         return View(enrollment);
     }

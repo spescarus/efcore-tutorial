@@ -1,0 +1,47 @@
+﻿@page "/courses"
+@model WebApp.Pages.Courses.IndexModel
+@{
+}
+
+<h2>Courses</h2>
+
+<p>
+    <a asp-page="./Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Course Number
+        </th>
+        <th>
+            Title
+        </th>
+        <th>
+            Credits
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Courses)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Credits)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.CourseId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.CourseId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.CourseId">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

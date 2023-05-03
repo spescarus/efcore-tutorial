@@ -1,0 +1,48 @@
+﻿@page "/students/create"
+@model WebApp.Pages.Students.CreateModel
+@{
+}
+
+<h1>Create</h1>
+
+<h4>Student</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-page="Create" asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StudentToCreate.LastName" class="control-label"></label>
+                <input asp-for="StudentToCreate.LastName" class="form-control" />
+                <span asp-validation-for="StudentToCreate.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentToCreate.FirstMidName" class="control-label"></label>
+                <input asp-for="StudentToCreate.FirstMidName" class="form-control" />
+                <span asp-validation-for="StudentToCreate.FirstMidName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentToCreate.Email" class="control-label"></label>
+                <input asp-for="StudentToCreate.Email" class="form-control" />
+                <span asp-validation-for="StudentToCreate.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudentToCreate.EnrollmentDate" class="control-label"></label>
+                <input asp-for="StudentToCreate.EnrollmentDate" class="form-control" />
+                <span asp-validation-for="StudentToCreate.EnrollmentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

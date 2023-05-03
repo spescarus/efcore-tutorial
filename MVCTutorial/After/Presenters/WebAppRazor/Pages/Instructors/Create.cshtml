@@ -1,0 +1,80 @@
+﻿@page "/instructors/create"
+@model WebApp.Pages.Instructors.CreateModel
+@{
+}
+
+<h1>Create</h1>
+
+<h4>Instructor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-page="./Create" asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="InstructorToCreate.LastName" class="control-label"></label>
+                <input asp-for="InstructorToCreate.LastName" class="form-control" />
+                <span asp-validation-for="InstructorToCreate.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstructorToCreate.FirstMidName" class="control-label"></label>
+                <input asp-for="InstructorToCreate.FirstMidName" class="form-control" />
+                <span asp-validation-for="InstructorToCreate.FirstMidName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstructorToCreate.Email" class="control-label"></label>
+                <input asp-for="InstructorToCreate.Email" class="form-control" />
+                <span asp-validation-for="InstructorToCreate.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstructorToCreate.HireDate" class="control-label"></label>
+                <input asp-for="InstructorToCreate.HireDate" class="form-control" />
+                <span asp-validation-for="InstructorToCreate.HireDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstructorToCreate.OfficeLocation" class="control-label"></label>
+                <input asp-for="InstructorToCreate.OfficeLocation" class="form-control" />
+                <span asp-validation-for="InstructorToCreate.OfficeLocation" class="text-danger" />
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table>
+                        <tr>
+                            @{
+                                int cnt = 0;
+
+                                foreach (var course in Model.Courses)
+                                {
+                                    if (cnt++ % 3 == 0)
+                                    {
+                                    @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedCourses"
+                                               value="@course.CourseId"
+                                               @(Html.Raw(course.Assigned ? "checked=\"checked\"" : "")) />
+                                        @course.CourseId @:  @course.Title
+                                    @:</td>
+                                }
+                            @:</tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

@@ -5,19 +5,19 @@ namespace Domain.Entities;
 
 public class Student : Entity
 {
-    public PersonName              Name           { get; private set; }
-    public string                  FullName       => Name.LastName + " " + Name.FirstMidName;
+    public Name                    Name           { get; private set; }
+    public string                  FullName       => $"{Name.LastName} {Name.FirstMidName}";
     public Email                   Email          { get; private set; }
     public DateTime                EnrollmentDate { get; private set; }
-    public ICollection<Enrollment> Enrollments    { get; private set; }
+    public ICollection<Enrollment> Enrollments    { get; private set; } = new List<Enrollment>();
 
     private Student()
     {
     }
 
-    private Student(PersonName name,
-                    Email      email,
-                    DateTime   enrollmentDate)
+    private Student(Name     name,
+                    Email    email,
+                    DateTime enrollmentDate)
     {
         Name           = name;
         Email          = email;
@@ -31,7 +31,7 @@ public class Student : Entity
                                          DateTime enrollmentDate)
     {
 
-        var name = PersonName.Create(firstMidName, lastName);
+        var name = Name.Create(firstMidName, lastName);
 
         if (name.IsFailure)
             return Result.Failure<Student>(name.Error);
@@ -46,12 +46,11 @@ public class Student : Entity
         return Result.Success(student);
     }
 
-    public Result<Student> Update(string   firstMidName,
-                                  string   lastName,
-                                  string   studentEmail,
-                                  DateTime enrollmentDate)
+    public Result<Student> EditPersonalInfo(string firstMidName,
+                                            string lastName,
+                                            string studentEmail)
     {
-        var name = PersonName.Create(firstMidName, lastName);
+        var name = Name.Create(firstMidName, lastName);
 
         if (name.IsFailure)
             return Result.Failure<Student>(name.Error);
@@ -61,10 +60,36 @@ public class Student : Entity
         if (email.IsFailure)
             return Result.Failure<Student>(email.Error);
 
-        Name           = name.Value;
-        Email          = email.Value;
-        EnrollmentDate = enrollmentDate;
+        Name  = name.Value;
+        Email = email.Value;
 
         return Result.Success(this);
+    }
+
+    public Result EnrollIn(Course course,
+                           Grade?  grade)
+    {
+        if (Enrollments.Any(p => p.Course == course))
+        {
+            return Result.Failure($"Already enrolled in course '{course.Title}'");
+        }
+
+        var enrollment = new Enrollment(this, course, grade);
+
+        Enrollments.Add(enrollment);
+
+        return Result.Success();
+    }
+
+    public void Disenroll(Course course)
+    {
+        var enrollment = Enrollments.FirstOrDefault(p => p.Course == course);
+
+        if (enrollment == null)
+        {
+            return;
+        }
+
+        Enrollments.Remove(enrollment);
     }
 }

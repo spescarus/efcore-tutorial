@@ -9,9 +9,8 @@ public sealed class StudentTypeConfiguration : BasicEntityTypeConfiguration<Stud
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Student> builder)
     {
-        builder.ToTable("Students");
-
-        builder.HasKey(p => p.Id);
+        builder.ToTable("Students")
+               .HasKey(p => p.Id);
 
         builder.Property(p => p.Id)
                .HasColumnName("Id")
@@ -42,5 +41,10 @@ public sealed class StudentTypeConfiguration : BasicEntityTypeConfiguration<Stud
         builder.Property(p => p.EnrollmentDate)
                .HasColumnName("EnrollmentDate")
                .IsRequired();
+
+        builder.HasMany(p => p.Enrollments)
+               .WithOne(p => p.Student)
+               .OnDelete(DeleteBehavior.Cascade)
+               .Metadata.PrincipalToDependent?.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

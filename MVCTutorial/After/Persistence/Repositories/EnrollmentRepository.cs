@@ -1,51 +1,51 @@
 ﻿using System.Linq.Expressions;
 using Domain.Entities;
 using Domain.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
-using Persistence.Repositories.Base;
 
 namespace Persistence.Repositories;
 
-internal class EnrollmentRepository : Repository<Enrollment>, IEnrollmentRepository
+internal class EnrollmentRepository : IEnrollmentRepository
 {
+    private readonly EfCoreContext _context;
+
     public EnrollmentRepository(EfCoreContext context)
-        : base(context)
     {
+        _context = context;
     }
 
     public async Task<IReadOnlyCollection<Enrollment>> GetEnrollmentsAsync()
     {
-        Expression<Func<Enrollment, object>>[] includes =
-        {
-            p => p.Course,
-            p => p.Student
-        };
+        var enrollmentDbSet = _context.Set<Enrollment>();
 
-        return await GetAllAsync(includes);
+        return await enrollmentDbSet.Include(p => p.Course)
+                                    .Include(p => p.Student)
+                                    .ToListAsync();
     }
 
     public async Task<IReadOnlyCollection<Enrollment>> GetEnrollmentsForCourseAsync(long courseId)
     {
-        Expression<Func<Enrollment, object>>[] includes =
-        {
-            p => p.Student
-        };
+        Expression<Func<Enrollment, bool>> predicate = p => p.Course.Id == courseId;
 
-        Expression<Func<Enrollment, bool>> predicate = p => p.CourseId == courseId;
-
-        return await GetAllByAsync(predicate, includes);
+        var enrollmentDbSet = _context.Set<Enrollment>();
+        return await enrollmentDbSet.Where(predicate)
+                                    .Include(p => p.Student)
+                                    .Include(p => p.Course)
+                                    .ToListAsync();
     }
 
     public async Task<Enrollment?> GetEnrollmentAsync(long enrollmentId)
     {
+        var enrollmentDbSet = _context.Set<Enrollment>();
+
         Expression<Func<Enrollment, object>>[] includes =
         {
             p => p.Course,
             p => p.Student
         };
 
-        var enrollment = await GetByIdAsync(enrollmentId, includes);
 
-        return enrollment;
+        return null;
     }
 }
